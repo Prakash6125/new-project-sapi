@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="38434ff6-f75b-4200-b05d-8e026feb5f2a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="first-successfulFlow" doc:id="0ca14be5-8ed2-4147-820c-edf783cebf5e" >
+		<http:listener doc:name="Listener" doc:id="6d00deed-869f-4819-961f-3071b4dfe664" config-ref="HTTP_Listener_config" path="/first"/>
+		<first-successful doc:name="First Successful" doc:id="c8359cc8-f0ad-4dff-8e3f-f3463c94d7bb" >
+			<route >
+				<ee:transform doc:name="Transform Message" doc:id="286be552-6b76-4d4c-9dad-880b30cea4d7" >
+					<ee:message >
+						<ee:set-payload ><![CDATA["first route"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<raise-error doc:name="Raise error" doc:id="177a7cdf-2d42-4ce5-b341-975985acb3bb" type="CE:FIRST_ROUTER_FAIL"/>
+			</route>
+			<route >
+				<ee:transform doc:name="Transform Message" doc:id="b36d8f62-8ac5-42cb-aadd-9f4ccc35934a" >
+					<ee:message >
+						<ee:set-payload ><![CDATA["second route"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<raise-error doc:name="Raise error" doc:id="981ec2ac-bbd8-497b-9f33-41080bb39890" type="CE:SECOND_ROUTER_FAILED"/>
+			</route>
+			<route >
+				<ee:transform doc:name="Transform Message" doc:id="a8728a47-9315-4f56-a408-124d26ae1aa8" >
+					<ee:message >
+						<ee:set-payload ><![CDATA["third route"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<raise-error doc:name="Raise error" doc:id="2f70f88d-f086-4862-9bd9-4699e1044b82" type="CE:THIRD_ROUTER_FAILED"/>
+			</route>
+		</first-successful>
+	</flow>
+</mule>
